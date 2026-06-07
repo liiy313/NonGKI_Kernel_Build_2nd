@@ -29,11 +29,11 @@ env:
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  KERNELSU_SOURCE : ""
-  KERNELSU_BRANCH : ""
+  KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
+  KERNELSU_BRANCH : "main"
 
-  KERNELSU_AUTO_GET : "true"
-  KERNELSU_AUTO_FORK : "sukisu"
+  KERNELSU_AUTO_GET : "false"
+  KERNELSU_AUTO_FORK : ""
 
   SUSFS_ENABLE : false
   SUSFS_FIXED : false
@@ -42,7 +42,7 @@ env:
   AK3_SOURCE : "https://github.com/osm0sis/AnyKernel3.git"
   AK3_BRANCH : "master"
 
-  BOOT_SOURCE : ""
+  BOOT_SOURCE : "https://github.com/liiy313/NonGKI_Kernel_Build_2nd/releases/download/boot-img/boot.img"
 
   NEED_DTBO : false
   NEED_SAFE_DTBO : false
@@ -52,10 +52,10 @@ env:
   # Other env
   PYTHON_VERSION: "3" # Only 2(Ubuntu 22.04 and Ubuntu 20.04) or 3(Any OS Versions).
 
-  PACK_METHOD: "Anykernel3" # Anykernel3 need SOURCE and BRANCH, MKBOOTIMG needn't it.
+  PACK_METHOD: "MKBOOTIMG" # Anykernel3 need SOURCE and BRANCH, MKBOOTIMG needn't it.
   PACK_KMODULES: "false" # if u want pack kernel modules (.ko) into Anykernel3.
 
-  KERNELSU_METHOD: "shell" # shell, manual and only.
+  KERNELSU_METHOD: "manual" # shell, manual and only.
 
   PATCHES_SOURCE: ""
   PATCHES_BRANCH: ""
@@ -117,9 +117,9 @@ jobs:
 
       - name: 🪛 Extra Kernel Options
         run: |
-          # Only ${{ env.DEVICE_NAME }} use it.
           cd $GITHUB_WORKSPACE/device_kernel
-          # Nothing
+          # 修复 KernelSU sulog 兼容性问题
+          sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
