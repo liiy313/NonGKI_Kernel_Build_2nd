@@ -46,6 +46,8 @@ env:
   DTBO_SOURCE : "https://github.com/liiy313/NonGKI_Kernel_Build_2nd/releases/download/boot-img/dtbo.img"
 
   NEED_DTBO : true
+  NEED_DTB : true
+  GENERATE_DTB: "true"
   NEED_SAFE_DTBO : false
 
   ROM_TEXT : "System_HyperOS_A13"
