@@ -6,7 +6,7 @@ on:
 
 env:
   # Device env
-  DEVICE_NAME : "Redmi K40 Gaming"
+  DEVICE_NAME : "Redmi_K40_Gaming"
   DEVICE_CODENAME : "ares"
 
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
