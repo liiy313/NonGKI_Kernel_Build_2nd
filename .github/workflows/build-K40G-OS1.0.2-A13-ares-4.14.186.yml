@@ -124,16 +124,6 @@ jobs:
           # 修复 KernelSU sulog 兼容性问题
           sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c
 
-      - name: 🔗 Merge DTB into Image.gz-dtb
-        run: |
-          cd $GITHUB_WORKSPACE/device_kernel/out/arch/arm64/boot
-          if [ -f Image.gz ]; then
-            cat Image.gz dts/mediatek/*.dtb > Image.gz-dtb
-            echo "Merged Image.gz with dtb into Image.gz-dtb"
-          else
-             echo "No Image.gz found, check build log"
-          fi
-
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
 
@@ -145,6 +135,16 @@ jobs:
 
       - name: 🚀 Build Process
         uses: ./.github/workflows/build-process
+
+      - name: 🔗 Merge DTB into Image.gz-dtb
+        run: |
+          cd $GITHUB_WORKSPACE/device_kernel/out/arch/arm64/boot
+          if [ -f Image.gz ]; then
+            cat Image.gz dts/mediatek/*.dtb > Image.gz-dtb
+            echo "Merged Image.gz with dtb into Image.gz-dtb"
+          else
+             echo "No Image.gz found, check build log"
+          fi
 
       - name: 🔩 Pack Process
         uses: ./.github/workflows/pack-process
