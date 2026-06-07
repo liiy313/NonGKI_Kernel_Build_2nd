@@ -15,7 +15,7 @@ env:
   KERNEL_SOURCE : "https://github.com/AbzRaider/android_kernel_xiaomi_mt6893"
   KERNEL_BRANCH : "lineage-21"
 
-  CLANG_SOURCE : "https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b.git"
+  CLANG_SOURCE : "https://github.com/kdrag0n/proton-clang.git"
   CLANG_BRANCH : "master"
 
   GCC_GNU : false
