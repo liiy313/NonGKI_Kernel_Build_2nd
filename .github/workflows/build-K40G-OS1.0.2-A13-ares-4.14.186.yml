@@ -12,8 +12,8 @@ env:
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
   EXTRA_CMDS : "LD=ld.lld LLVM=1 LLVM_IAS=1"
 
-  KERNEL_SOURCE : "https://github.com/MiCode/Xiaomi_Kernel_OpenSource"
-  KERNEL_BRANCH : "ares-r-oss"
+  KERNEL_SOURCE : "https://github.com/AbzRaider/android_kernel_xiaomi_mt6893"
+  KERNEL_BRANCH : "lineage-21"
 
   CLANG_SOURCE : "https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b.git"
   CLANG_BRANCH : "master"
@@ -29,10 +29,8 @@ env:
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
-  KERNELSU_BRANCH : "master"
-  MODULES_SOURCE : "https://github.com/MiCode/MTK_kernel_modules.git"
-  MODULES_BRANCH : "ares-r-oss"
+  KERNELSU_SOURCE : ""
+  KERNELSU_BRANCH : ""
 
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
@@ -60,7 +58,7 @@ env:
   PACK_METHOD: "MKBOOTIMG" # Anykernel3 need SOURCE and BRANCH, MKBOOTIMG needn't it.
   PACK_KMODULES: "false" # if u want pack kernel modules (.ko) into Anykernel3.
 
-  KERNELSU_METHOD: "manual" # shell, manual and only.
+  KERNELSU_METHOD: "only" # shell, manual and only.
 
   PATCHES_SOURCE: ""
   PATCHES_BRANCH: ""
