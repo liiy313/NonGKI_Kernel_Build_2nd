@@ -9,7 +9,7 @@ env:
   DEVICE_NAME : "Redmi_K40_Gaming"
   DEVICE_CODENAME : "ares"
 
-  CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu- Image.gz-dtb"
+  CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
   EXTRA_CMDS : "LD=ld.lld LLVM=1 LLVM_IAS=1"
 
   KERNEL_SOURCE : "https://github.com/Tkpointz/android_kernel_aresin"
@@ -85,6 +85,7 @@ env:
 
   GENERATE_DTB: "true" # if u kernel need DTB , but cannot auto generate it. (Only Anykernel3).
   GENERATE_CHIP: "mediatek" # only supported for qcom and mediatek.
+  BUILD_TARGET: "Image.gz-dtb"
 
   BUILD_DEBUGGER: "true" # Output build errors.
   SKIP_PATCH: "false" # Ignore errors found in Patch Debugger.
