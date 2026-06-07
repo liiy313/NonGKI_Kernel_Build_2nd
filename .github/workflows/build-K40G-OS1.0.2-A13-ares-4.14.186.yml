@@ -43,6 +43,7 @@ env:
   AK3_BRANCH : "master"
 
   BOOT_SOURCE : "https://github.com/liiy313/NonGKI_Kernel_Build_2nd/releases/download/boot-img/boot.img"
+  DTBO_SOURCE : "https://github.com/liiy313/NonGKI_Kernel_Build_2nd/releases/download/boot-img/dtbo.img"
 
   NEED_DTBO : true
   NEED_SAFE_DTBO : false
