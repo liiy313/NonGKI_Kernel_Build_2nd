@@ -11,8 +11,8 @@ env:
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
   EXTRA_CMDS : "LD=ld.lld LLVM=1 LLVM_IAS=1"
 
-  KERNEL_SOURCE : "https://github.com/Tkpointz/android_kernel_aresin"
-  KERNEL_BRANCH : "lxr"
+  KERNEL_SOURCE : "https://github.com/AbzRaider/android_kernel_xiaomi_mt6893"
+  KERNEL_BRANCH : "lineage-21"
 
   CLANG_SOURCE : "https://github.com/kdrag0n/proton-clang.git"
   CLANG_BRANCH : "master"
@@ -24,15 +24,16 @@ env:
   GCC_32_BRANCH : ""
 
   DEFCONFIG_SOURCE: ""
-  DEFCONFIG_NAME : "aresin_defconfig"
+  DEFCONFIG_NAME : "ares_user_defconfig"
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
-  KERNELSU_BRANCH : "master"
-
+  # 该内核已内置 KernelSU，使用 only 模式
+  KERNELSU_SOURCE : ""
+  KERNELSU_BRANCH : ""
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
+  KERNELSU_METHOD: "only"
 
   SUSFS_ENABLE : false
   SUSFS_FIXED : false
@@ -53,8 +54,6 @@ env:
   PYTHON_VERSION: "3"
   PACK_METHOD: "MKBOOTIMG"
   PACK_KMODULES: "false"
-
-  KERNELSU_METHOD: "manual"
 
   PATCHES_SOURCE: ""
   PATCHES_BRANCH: ""
@@ -117,7 +116,8 @@ jobs:
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
-          sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c
+          # 如果内核已内置 KSU，可能不需要 sulog 修复，但保留以防万一
+          sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c || true
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
