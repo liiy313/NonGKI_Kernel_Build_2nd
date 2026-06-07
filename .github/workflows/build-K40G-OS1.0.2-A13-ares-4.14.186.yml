@@ -66,7 +66,7 @@ env:
   REKERNEL_ENABLE: "false" # if u need Re:Kernel.
   DROIDSPACES_ENABLE: "false" # if u need Droidspaces or LXC/Docker.
 
-  HOOK_METHOD: "normal" # Manual hook method -> syscall.
+  HOOK_METHOD: "syscall" # Manual hook method -> syscall.
 
   KERNEL_PATCH: "false" # If your kernel version is <= 4.9, you have the option of enabling the patch to patch the kernel_write and kernel_read functions.
 
