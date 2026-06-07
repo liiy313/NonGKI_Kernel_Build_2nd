@@ -126,7 +126,9 @@ jobs:
           cd $GITHUB_WORKSPACE/device_kernel
           # 修复 KernelSU sulog 兼容性问题
           sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c
-
+          # 修复官方内核与Clang的堆栈保护兼容性
+          sed -i 's/CONFIG_CC_STACKPROTECTOR_STRONG=y/# CONFIG_CC_STACKPROTECTOR_STRONG is not set/' arch/arm64/configs/ares_user_defconfig
+    
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
 
