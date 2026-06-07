@@ -28,12 +28,11 @@ env:
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  # 该内核已内置 KernelSU，使用 only 模式
-  KERNELSU_SOURCE : ""
-  KERNELSU_BRANCH : ""
+  KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
+  KERNELSU_BRANCH : "master"
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
-  KERNELSU_METHOD: "only"
+  KERNELSU_METHOD: "manual"
 
   SUSFS_ENABLE : false
   SUSFS_FIXED : false
@@ -116,7 +115,6 @@ jobs:
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
-          # 如果内核已内置 KSU，可能不需要 sulog 修复，但保留以防万一
           sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c || true
 
       - name: 🧰 Patch Kernel of Re:Kernel
