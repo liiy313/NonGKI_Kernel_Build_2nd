@@ -9,7 +9,7 @@ env:
   DEVICE_NAME : "Redmi_K40_Gaming"
   DEVICE_CODENAME : "ares"
 
-  CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
+  CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu- Image.gz-dtb"
   EXTRA_CMDS : "LD=ld.lld LLVM=1 LLVM_IAS=1"
 
   KERNEL_SOURCE : "https://github.com/Tkpointz/android_kernel_aresin"
@@ -31,6 +31,8 @@ env:
 
   KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
   KERNELSU_BRANCH : "master"
+  MODULES_SOURCE : "https://github.com/MiCode/MTK_kernel_modules.git"
+  MODULES_BRANCH : "ares-r-oss"
 
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
@@ -135,16 +137,6 @@ jobs:
 
       - name: 🚀 Build Process
         uses: ./.github/workflows/build-process
-
-      - name: 🔗 Merge DTB into Image.gz-dtb
-        run: |
-          cd $GITHUB_WORKSPACE/device_kernel/out/arch/arm64/boot
-          if [ -f Image.gz ]; then
-            cat Image.gz dts/mediatek/*.dtb > Image.gz-dtb
-            echo "Merged Image.gz with dtb into Image.gz-dtb"
-          else
-             echo "No Image.gz found, check build log"
-          fi
 
       - name: 🔩 Pack Process
         uses: ./.github/workflows/pack-process
