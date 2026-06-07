@@ -14,8 +14,8 @@ env:
   KERNEL_SOURCE : "https://github.com/AbzRaider/android_kernel_xiaomi_mt6893"
   KERNEL_BRANCH : "lineage-21"
 
-  CLANG_SOURCE : "https://github.com/kdrag0n/proton-clang.git"
-  CLANG_BRANCH : "master"
+  CLANG_SOURCE : "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r416183b.tar.gz"
+  CLANG_BRANCH : ""
 
   GCC_GNU : false
   GCC_64_SOURCE : ""
@@ -89,8 +89,8 @@ env:
 jobs:
   build-kernel:
     name: Build Kernel
-    runs-on: ubuntu-latest
-    container: ubuntu:focal
+    runs-on: ubuntu-24.04
+    container: ubuntu:noble
     env:
       CCACHE_COMPILERCHECK: "%compiler% -dumpmachine; %compiler% -dumpversion"
       CCACHE_NOHASHDIR: "true"
