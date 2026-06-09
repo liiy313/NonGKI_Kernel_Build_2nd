@@ -119,9 +119,14 @@ jobs:
           cd $GITHUB_WORKSPACE/device_kernel
           # 修复官方旧内核与 Proton Clang 的兼容性
           sed -i 's/CONFIG_CC_STACKPROTECTOR_STRONG=y/# CONFIG_CC_STACKPROTECTOR_STRONG is not set/' arch/arm64/configs/ares_user_defconfig
-          # 进入 KernelSU 目录，获取完整历史，然后切换到目标版本
+          # 进入 KernelSU 目录，智能获取历史并切换到目标版本
           cd KernelSU
-          git fetch --unshallow --tags
+          # 仅当仓库为浅克隆时才执行 --unshallow
+          if git rev-parse --is-shallow-repository | grep -q true; then
+            git fetch --unshallow --tags
+          else
+            git fetch --tags
+          fi
           # 尝试检出指定 commit，若失败则回退到 v3.1.0 标签
           if git cat-file -t f34dbc95 2>/dev/null; then
             git checkout f34dbc95
