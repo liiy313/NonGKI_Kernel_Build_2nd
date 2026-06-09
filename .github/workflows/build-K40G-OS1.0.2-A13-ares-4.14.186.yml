@@ -28,11 +28,12 @@ env:
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
-  KERNELSU_BRANCH : "master"
+  # AbzRaider的内核已内置KSU，使用only模式避免脚本覆盖源码
+  KERNELSU_SOURCE : ""
+  KERNELSU_BRANCH : ""
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
-  KERNELSU_METHOD: "manual"
+  KERNELSU_METHOD: "only"
 
   SUSFS_ENABLE : false
   SUSFS_FIXED : false
@@ -112,12 +113,21 @@ jobs:
       - name: 🔗 Patch for no-kprobe
         uses: ./.github/workflows/patch-no-kprobe
 
+      # 恢复设备维护者指定的revert操作，使用ours策略处理可能的冲突
+      - name: 🔙 Revert problematic commit (per device maintainer)
+        run: |
+          cd $GITHUB_WORKSPACE/device_kernel
+          git fetch --unshallow
+          git config user.email "builder@github.com"
+          git config user.name "Github Actions"
+          git revert 5139d71cb0daab35e42f370a20a051e035776d1e --no-edit -X ours
+
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
           # 修复 KernelSU sulog 类型错误
           sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c || true
-          # 修复 aes-modes.S 汇编错误（新版 Clang 不支持此特性）
+          # 再次确保 AES CE 被禁用，防止因KSU修补导致配置被重置
           sed -i 's/CONFIG_CRYPTO_AES_ARM64_CE=y/# CONFIG_CRYPTO_AES_ARM64_CE is not set/' arch/arm64/configs/ares_user_defconfig
 
       - name: 🧰 Patch Kernel of Re:Kernel
