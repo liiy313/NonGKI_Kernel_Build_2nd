@@ -112,6 +112,13 @@ jobs:
       - name: 🔗 Patch for no-kprobe
         uses: ./.github/workflows/patch-no-kprobe
 
+      - name: 🔙 Revert problematic commit (per device maintainer)
+        run: |
+          cd $GITHUB_WORKSPACE/device_kernel
+          git config user.email "builder@github.com"
+          git config user.name "Github Actions"
+          git revert 5139d71cb0daab35e42f370a20a051e035776d1e --no-edit
+
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
