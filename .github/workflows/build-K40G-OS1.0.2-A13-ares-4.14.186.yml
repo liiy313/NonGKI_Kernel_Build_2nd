@@ -11,8 +11,8 @@ env:
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
   EXTRA_CMDS : "LD=ld.lld LLVM=1 LLVM_IAS=1"
 
-  KERNEL_SOURCE : "https://github.com/AbzRaider/android_kernel_xiaomi_mt6893"
-  KERNEL_BRANCH : "lineage-21"
+  KERNEL_SOURCE : "https://github.com/Tkpointz/android_kernel_aresin"
+  KERNEL_BRANCH : "lxr"
 
   CLANG_SOURCE : "https://github.com/kdrag0n/proton-clang.git"
   CLANG_BRANCH : "master"
@@ -24,22 +24,23 @@ env:
   GCC_32_BRANCH : ""
 
   DEFCONFIG_SOURCE: ""
-  DEFCONFIG_NAME : "ares_user_defconfig"
+  DEFCONFIG_NAME : "aresin_defconfig"
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
-  KERNELSU_BRANCH : "master"
+  # 暂时不集成 KSU，测试纯净内核是否能启动
+  KERNELSU_SOURCE : ""
+  KERNELSU_BRANCH : ""
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
-  KERNELSU_METHOD: "manual"
+  KERNELSU_METHOD: "only"
 
   SUSFS_ENABLE : false
   SUSFS_FIXED : false
-  SUSFS_UPDATE : true
+  SUSFS_UPDATE : false
 
-  AK3_SOURCE : "https://github.com/osm0sis/AnyKernel3.git"
-  AK3_BRANCH : "master"
+  AK3_SOURCE : ""
+  AK3_BRANCH : ""
 
   BOOT_SOURCE : "https://github.com/liiy313/NonGKI_Kernel_Build_2nd/releases/download/boot-img/boot.img"
   DTBO_SOURCE : "https://github.com/liiy313/NonGKI_Kernel_Build_2nd/releases/download/boot-img/dtbo.img"
@@ -56,14 +57,13 @@ env:
 
   PATCHES_SOURCE: ""
   PATCHES_BRANCH: ""
-
   SUSFS_FOLDER_FIXED: ""
   SUSFS_PATCH_FIXED: ""
 
   REKERNEL_ENABLE: "false"
   DROIDSPACES_ENABLE: "false"
 
-  HOOK_METHOD: "syscall"
+  HOOK_METHOD: "normal"
   KERNEL_PATCH: "false"
 
   KPM_ENABLE: "false"
@@ -112,21 +112,10 @@ jobs:
       - name: 🔗 Patch for no-kprobe
         uses: ./.github/workflows/patch-no-kprobe
 
-      - name: 🔙 Revert problematic commit (per device maintainer)
-        run: |
-          cd $GITHUB_WORKSPACE/device_kernel
-          git fetch --unshallow
-          git config user.email "builder@github.com"
-          git config user.name "Github Actions"
-          git revert 5139d71cb0daab35e42f370a20a051e035776d1e --no-edit -X ours
-
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
-          # 修复 sulog 类型错误
-          sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c || true
-          # 强制关闭 AES CE 加速，修复 aes-modes.S 汇编错误
-          sed -i '/^CONFIG_CRYPTO_AES_ARM64_CE/c\CONFIG_CRYPTO_AES_ARM64_CE=n' arch/arm64/configs/ares_user_defconfig
+          # 无操作
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
