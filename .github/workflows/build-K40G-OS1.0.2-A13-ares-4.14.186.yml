@@ -118,7 +118,7 @@ jobs:
           git fetch --unshallow
           git config user.email "builder@github.com"
           git config user.name "Github Actions"
-          git revert 5139d71cb0daab35e42f370a20a051e035776d1e --no-edit
+          git revert 5139d71cb0daab35e42f370a20a051e035776d1e --no-edit -X ours
 
       - name: 🪛 Extra Kernel Options
         run: |
