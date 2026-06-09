@@ -112,18 +112,13 @@ jobs:
       - name: 🔗 Patch for no-kprobe
         uses: ./.github/workflows/patch-no-kprobe
 
-      - name: 🔙 Revert problematic commit (per device maintainer)
-        run: |
-          cd $GITHUB_WORKSPACE/device_kernel
-          git fetch --unshallow
-          git config user.email "builder@github.com"
-          git config user.name "Github Actions"
-          git revert 5139d71cb0daab35e42f370a20a051e035776d1e --no-edit -X ours
-
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
+          # 修复 KernelSU sulog 类型错误
           sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c || true
+          # 修复 aes-modes.S 汇编错误（新版 Clang 不支持此特性）
+          sed -i 's/CONFIG_CRYPTO_AES_ARM64_CE=y/# CONFIG_CRYPTO_AES_ARM64_CE is not set/' arch/arm64/configs/ares_user_defconfig
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
