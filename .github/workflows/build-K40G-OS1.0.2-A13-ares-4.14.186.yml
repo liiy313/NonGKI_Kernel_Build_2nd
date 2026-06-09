@@ -29,9 +29,9 @@ env:
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  # KernelSU 使用你指定的 Android 11 兼容版本
+  # KernelSU：先用主分支克隆，再在 Extra Kernel Options 中切到指定 commit
   KERNELSU_SOURCE : "https://github.com/tiann/KernelSU"
-  KERNELSU_BRANCH : "v3.1.0-77-gf34dbc95"
+  KERNELSU_BRANCH : "main"
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
   KERNELSU_METHOD: "manual"
@@ -119,6 +119,10 @@ jobs:
           cd $GITHUB_WORKSPACE/device_kernel
           # 修复官方旧内核与 Proton Clang 的兼容性
           sed -i 's/CONFIG_CC_STACKPROTECTOR_STRONG=y/# CONFIG_CC_STACKPROTECTOR_STRONG is not set/' arch/arm64/configs/ares_user_defconfig
+          # 进入 KernelSU 目录，切换到指定版本
+          cd KernelSU
+          git fetch --tags
+          git checkout f34dbc95
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
