@@ -1,4 +1,4 @@
-name: Build Redmi K40 Gaming (ares) (HyperOS A13)
+name: Build Redmi K40 Gaming (ares) (MIUI12.5 A11)
 
 on:
   workflow_call:
@@ -11,8 +11,9 @@ env:
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
   EXTRA_CMDS : "LD=ld.lld LLVM=1 LLVM_IAS=1"
 
-  KERNEL_SOURCE : "https://github.com/Tkpointz/android_kernel_aresin"
-  KERNEL_BRANCH : "lxr"
+  # 官方内核源码，与 MIUI 12.5 (Android 11) 匹配
+  KERNEL_SOURCE : "https://github.com/MiCode/Xiaomi_Kernel_OpenSource"
+  KERNEL_BRANCH : "ares-r-oss"
 
   CLANG_SOURCE : "https://github.com/kdrag0n/proton-clang.git"
   CLANG_BRANCH : "master"
@@ -24,19 +25,20 @@ env:
   GCC_32_BRANCH : ""
 
   DEFCONFIG_SOURCE: ""
-  DEFCONFIG_NAME : "aresin_defconfig"
+  DEFCONFIG_NAME : "ares_user_defconfig"
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
-  KERNELSU_BRANCH : "master"
+  # KernelSU 使用你指定的 Android 11 兼容版本
+  KERNELSU_SOURCE : "https://github.com/tiann/KernelSU"
+  KERNELSU_BRANCH : "v3.1.0-77-gf34dbc95"
   KERNELSU_AUTO_GET : "false"
   KERNELSU_AUTO_FORK : ""
   KERNELSU_METHOD: "manual"
 
   SUSFS_ENABLE : false
   SUSFS_FIXED : false
-  SUSFS_UPDATE : true
+  SUSFS_UPDATE : false
 
   AK3_SOURCE : "https://github.com/osm0sis/AnyKernel3.git"
   AK3_BRANCH : "master"
@@ -48,7 +50,7 @@ env:
   NEED_DTB : true
   NEED_SAFE_DTBO : false
 
-  ROM_TEXT : "System_HyperOS_A13"
+  ROM_TEXT : "MIUI12.5_Android11"
 
   PYTHON_VERSION: "3"
   PACK_METHOD: "MKBOOTIMG"
@@ -115,7 +117,8 @@ jobs:
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
-          sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c || true
+          # 修复官方旧内核与 Proton Clang 的兼容性
+          sed -i 's/CONFIG_CC_STACKPROTECTOR_STRONG=y/# CONFIG_CC_STACKPROTECTOR_STRONG is not set/' arch/arm64/configs/ares_user_defconfig
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
@@ -128,6 +131,12 @@ jobs:
 
       - name: 🚀 Build Process
         uses: ./.github/workflows/build-process
+
+      - name: 📤 Upload Image.gz-dtb
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-image
+          path: device_kernel/out/arch/arm64/boot/Image.gz-dtb
 
       - name: 🔩 Pack Process
         uses: ./.github/workflows/pack-process
