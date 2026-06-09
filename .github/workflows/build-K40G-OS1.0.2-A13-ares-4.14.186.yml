@@ -11,9 +11,8 @@ env:
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
   EXTRA_CMDS : "LD=ld.lld LLVM=1 LLVM_IAS=1"
 
-  # 使用 AbzRaider 的内核源码，这是大佬推荐的
-  KERNEL_SOURCE : "https://github.com/AbzRaider/android_kernel_xiaomi_mt6893"
-  KERNEL_BRANCH : "lineage-21"
+  KERNEL_SOURCE : "https://github.com/Tkpointz/android_kernel_aresin"
+  KERNEL_BRANCH : "lxr"
 
   CLANG_SOURCE : "https://github.com/kdrag0n/proton-clang.git"
   CLANG_BRANCH : "master"
@@ -25,11 +24,10 @@ env:
   GCC_32_BRANCH : ""
 
   DEFCONFIG_SOURCE: ""
-  DEFCONFIG_NAME : "ares_user_defconfig"
+  DEFCONFIG_NAME : "aresin_defconfig"
   DEFCONFIG_ORIGIN_IMAGE: ""
   DEFCONFIG_FROM_BOOT: false
 
-  # 集成 KernelSU，这个保留不变
   KERNELSU_SOURCE : "https://github.com/backslashxx/KernelSU"
   KERNELSU_BRANCH : "master"
   KERNELSU_AUTO_GET : "false"
@@ -58,6 +56,7 @@ env:
 
   PATCHES_SOURCE: ""
   PATCHES_BRANCH: ""
+
   SUSFS_FOLDER_FIXED: ""
   SUSFS_PATCH_FIXED: ""
 
@@ -113,20 +112,9 @@ jobs:
       - name: 🔗 Patch for no-kprobe
         uses: ./.github/workflows/patch-no-kprobe
 
-      # --- 关键修复：强制撤销那个问题补丁，不接受任何冲突 ---
-      - name: 🔙 Revert problematic commit (per device maintainer)
-        run: |
-          cd $GITHUB_WORKSPACE/device_kernel
-          git fetch --unshallow
-          git config user.email "builder@github.com"
-          git config user.name "Github Actions"
-          # 使用 -X theirs 策略，在发生冲突时完全采用补丁撤销后的版本，彻底抹除补丁的影响
-          git revert 5139d71cb0daab35e42f370a20a051e035776d1e --no-edit -X theirs
-
       - name: 🪛 Extra Kernel Options
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
-          # 修复 KernelSU sulog 类型错误
           sed -i 's/USER_ARG_NULL/*USER_ARG_NULL/' drivers/kernelsu/sulog/event.c || true
 
       - name: 🧰 Patch Kernel of Re:Kernel
@@ -140,12 +128,6 @@ jobs:
 
       - name: 🚀 Build Process
         uses: ./.github/workflows/build-process
-
-      - name: 📤 Upload Image.gz-dtb
-        uses: actions/upload-artifact@v4
-        with:
-          name: kernel-image
-          path: device_kernel/out/arch/arm64/boot/Image.gz-dtb
 
       - name: 🔩 Pack Process
         uses: ./.github/workflows/pack-process
